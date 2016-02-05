@@ -9,9 +9,9 @@ The following **required** functionality is completed:
 
 * User can **scroll through current popular photos** from Instagram
 * For each photo displayed, user can see the following details:
-  * [ ] Graphic, Caption
+  * [X] Graphic, Caption, Username
+  * [X] Relative timestamp, like count, user profile image
   
-
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
