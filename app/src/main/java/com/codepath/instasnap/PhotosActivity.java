@@ -1,6 +1,7 @@
 package com.codepath.instasnap;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
@@ -20,6 +21,7 @@ public class PhotosActivity extends AppCompatActivity {
     public static final String CLIENT_ID = "e05c462ebd86446ea48a5af73769b602";
     private ArrayList<InstasnapPhoto> photos;
     private InstasnapPhotosAdapter aPhotos;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,20 @@ public class PhotosActivity extends AppCompatActivity {
         photos = new ArrayList<>();
       //Create adapter and link to source
         aPhotos = new InstasnapPhotosAdapter(this, photos);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchPopularPhotos();
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
 
         //Set adapter to listview from layout
         ListView lvPhotos = (ListView) findViewById(R.id.lvPhotos);
@@ -72,6 +88,7 @@ public class PhotosActivity extends AppCompatActivity {
 
                 //update adapter
                 aPhotos.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
 
             @Override
