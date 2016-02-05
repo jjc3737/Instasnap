@@ -14,6 +14,7 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -27,6 +28,10 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
         ImageView userPhoto;
         TextView userName;
         TextView timeStamp;
+        TextView likes;
+        TextView commentOne;
+        TextView commentTwo;
+
     }
     public InstasnapPhotosAdapter(Context context, List<InstasnapPhoto> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
@@ -50,6 +55,9 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
             viewHolder.userPhoto = (ImageView) convertView.findViewById(R.id.ivUser);
             viewHolder.userName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.tvTimeStamp);
+            viewHolder.likes = (TextView) convertView.findViewById(R.id.tvLikes);
+            viewHolder.commentOne = (TextView) convertView.findViewById(R.id.tvCommentOne);
+            viewHolder.commentTwo = (TextView) convertView.findViewById(R.id.tvCommentTwo);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -57,12 +65,16 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
 
         viewHolder.caption.setText(photo.caption);
         viewHolder.userName.setText(photo.username);
-
+        viewHolder.likes.setText(NumberFormat.getInstance().format((double) photo.likesCount) + " likes");
         viewHolder.timeStamp.setText(DateUtils.getRelativeTimeSpanString(photo.timeStamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
+
+
         //Clear out imageview (because we could be using recycled view)
         viewHolder.photo.setImageResource(0);
         viewHolder.userPhoto.setImageResource(0);
 
+        viewHolder.commentOne.setText(photo.firstComment.userName + ": " + photo.firstComment.comment);
+        viewHolder.commentTwo.setText(photo.secondComment.userName + ": " + photo.secondComment.comment);
 
         Picasso.with(getContext()).load(photo.imageUrl).into(viewHolder.photo);
        // Picasso.with(getContext()).load(photo.imageUrl).placeholder(R.drawable.ic_launcher).into(ivPhoto);
