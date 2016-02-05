@@ -20,6 +20,15 @@
         android:layout_toRightOf="@+id/ivUser"
         android:layout_marginTop="15dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvTimeStamp"
+        android:layout_alignTop="@+id/ivUser"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

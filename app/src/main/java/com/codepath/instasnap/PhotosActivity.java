@@ -61,7 +61,7 @@ public class PhotosActivity extends AppCompatActivity {
                         photo.imageHeight = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
                         photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
                         photo.userImageUrl = photoJSON.getJSONObject("user").getString("profile_picture");
-                        photo.timeStamp = Long.valueOf(photoJSON.getString("created_time"));
+                        photo.timeStamp = Long.valueOf(photoJSON.getString("created_time")) * 1000;
 
                         photos.add(photo);
 

@@ -2,6 +2,7 @@ package com.codepath.instasnap;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
         ImageView photo;
         ImageView userPhoto;
         TextView userName;
+        TextView timeStamp;
     }
     public InstasnapPhotosAdapter(Context context, List<InstasnapPhoto> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
@@ -47,6 +49,7 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
             viewHolder.photo = (ImageView) convertView.findViewById(R.id.ivPhoto);
             viewHolder.userPhoto = (ImageView) convertView.findViewById(R.id.ivUser);
             viewHolder.userName = (TextView) convertView.findViewById(R.id.tvUserName);
+            viewHolder.timeStamp = (TextView) convertView.findViewById(R.id.tvTimeStamp);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -54,6 +57,8 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
 
         viewHolder.caption.setText(photo.caption);
         viewHolder.userName.setText(photo.username);
+
+        viewHolder.timeStamp.setText(DateUtils.getRelativeTimeSpanString(photo.timeStamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
         //Clear out imageview (because we could be using recycled view)
         viewHolder.photo.setImageResource(0);
         viewHolder.userPhoto.setImageResource(0);
