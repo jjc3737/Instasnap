@@ -10,8 +10,7 @@ public class InstasnapPhoto {
     public String imageUrl;
     public int imageHeight;
     public int likesCount;
-    public int timeStamp;
-    public String userId;
-    public String mediaId;
+    public Long timeStamp;
+    public String userImageUrl;
 
 }

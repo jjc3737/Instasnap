@@ -1,6 +1,7 @@
 package com.codepath.instasnap;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -20,6 +23,8 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
     private static class ViewHolder {
         TextView caption;
         ImageView photo;
+        ImageView userPhoto;
+        TextView userName;
     }
     public InstasnapPhotosAdapter(Context context, List<InstasnapPhoto> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
@@ -40,18 +45,35 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
             convertView = inflater.inflate(R.layout.item_photo, parent, false);
             viewHolder.caption = (TextView) convertView.findViewById(R.id.tvCaption);
             viewHolder.photo = (ImageView) convertView.findViewById(R.id.ivPhoto);
+            viewHolder.userPhoto = (ImageView) convertView.findViewById(R.id.ivUser);
+            viewHolder.userName = (TextView) convertView.findViewById(R.id.tvUserName);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         viewHolder.caption.setText(photo.caption);
+        viewHolder.userName.setText(photo.username);
         //Clear out imageview (because we could be using recycled view)
         viewHolder.photo.setImageResource(0);
+        viewHolder.userPhoto.setImageResource(0);
 
 
         Picasso.with(getContext()).load(photo.imageUrl).into(viewHolder.photo);
        // Picasso.with(getContext()).load(photo.imageUrl).placeholder(R.drawable.ic_launcher).into(ivPhoto);
+
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.BLUE)
+                .borderWidthDp(3)
+                .cornerRadiusDp(30)
+                .oval(false)
+                .build();
+
+        Picasso.with(getContext())
+                .load(photo.userImageUrl)
+                .fit()
+                .transform(transformation)
+                .into(viewHolder.userPhoto);
 
         //Insert model data into view items
 
