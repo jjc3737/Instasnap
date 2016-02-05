@@ -80,6 +80,20 @@ public class PhotosActivity extends AppCompatActivity {
                         photo.userImageUrl = photoJSON.getJSONObject("user").getString("profile_picture");
                         photo.timeStamp = Long.valueOf(photoJSON.getString("created_time")) * 1000;
 
+                        InstasnapComment first = new InstasnapComment();
+                        JSONArray comments = photoJSON.getJSONObject("comments").getJSONArray("data");
+                        JSONObject firstComment = comments.getJSONObject(0);
+                        first.userName = firstComment.getJSONObject("from").getString("username");
+                        first.comment = firstComment.getString("text");
+
+                        InstasnapComment second = new InstasnapComment();
+                        JSONObject secondComment = comments.getJSONObject(1);
+                        second.userName = secondComment.getJSONObject("from").getString("username");
+                        second.comment = secondComment.getString("text");
+
+                        photo.firstComment = first;
+                        photo.secondComment = second;
+
                         photos.add(photo);
 
                     }

@@ -12,5 +12,7 @@ public class InstasnapPhoto {
     public int likesCount;
     public Long timeStamp;
     public String userImageUrl;
+    public InstasnapComment firstComment;
+    public InstasnapComment secondComment;
 
 }
