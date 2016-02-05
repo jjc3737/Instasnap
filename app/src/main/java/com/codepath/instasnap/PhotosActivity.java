@@ -65,6 +65,7 @@ public class PhotosActivity extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
                 JSONArray photosJSON = null;
                 try {
+                    photos.clear();
                     photosJSON = response.getJSONArray("data");
                     for (int i = 0; i <photosJSON.length(); i++) {
                         JSONObject photoJSON = photosJSON.getJSONObject(i);
