@@ -2,11 +2,15 @@ package com.codepath.instasnap;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +26,8 @@ import java.util.List;
  */
 public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
 
+    private Context context;
+
     private static class ViewHolder {
         TextView caption;
         ImageView photo;
@@ -31,10 +37,12 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
         TextView likes;
         TextView commentOne;
         TextView commentTwo;
+        Button comments;
 
     }
     public InstasnapPhotosAdapter(Context context, List<InstasnapPhoto> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
+        this.context = context;
     }
 
     //Use template to display each photo
@@ -43,6 +51,9 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         InstasnapPhoto photo = getItem(position);
+
+        DeviceDimensionsHelper helper = new DeviceDimensionsHelper();
+        int widthPixels = helper.getDisplayWidth(getContext());
 
         ViewHolder viewHolder;
         //Check if we are using a recycled view, if not inflate
@@ -58,6 +69,7 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
             viewHolder.likes = (TextView) convertView.findViewById(R.id.tvLikes);
             viewHolder.commentOne = (TextView) convertView.findViewById(R.id.tvCommentOne);
             viewHolder.commentTwo = (TextView) convertView.findViewById(R.id.tvCommentTwo);
+            viewHolder.comments = (Button) convertView.findViewById(R.id.btComments);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -68,23 +80,56 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
         viewHolder.likes.setText(NumberFormat.getInstance().format((double) photo.likesCount) + " likes");
         viewHolder.timeStamp.setText(DateUtils.getRelativeTimeSpanString(photo.timeStamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
 
+        viewHolder.comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //add fragment with comments
+//                PhotosActivity activity = (PhotosActivity) context;
+//                FragmentTransaction t = activity.getFragmentManager().beginTransaction();
+//                t.add(R.id.your_placeholder, new CommentsFragment());
+//                t.commit();
+
+            }
+        });
 
         //Clear out imageview (because we could be using recycled view)
         viewHolder.photo.setImageResource(0);
         viewHolder.userPhoto.setImageResource(0);
 
-        viewHolder.commentOne.setText(photo.firstComment.userName + ": " + photo.firstComment.comment);
-        viewHolder.commentTwo.setText(photo.secondComment.userName + ": " + photo.secondComment.comment);
+        SpannableStringBuilder build = new SpannableStringBuilder();
+        String firstUserName = photo.firstComment.userName;
+        SpannableString blueSpannable = new SpannableString(firstUserName);
+        blueSpannable.setSpan(new ForegroundColorSpan(Color.parseColor("#125688")), 0, firstUserName.length(),0);
+        build.append(blueSpannable);
 
-        Picasso.with(getContext()).load(photo.imageUrl).into(viewHolder.photo);
-       // Picasso.with(getContext()).load(photo.imageUrl).placeholder(R.drawable.ic_launcher).into(ivPhoto);
+        String firstComment = " " + photo.firstComment.comment;
+        SpannableString blackSpannable = new SpannableString(firstComment);
+        blackSpannable.subSequence(0, firstComment.length());
+        build.append(blackSpannable);
+
+        viewHolder.commentOne.setText(build, TextView.BufferType.SPANNABLE);
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        String secondUserName = photo.secondComment.userName;
+        SpannableString blue = new SpannableString(secondUserName);
+        blue.setSpan(new ForegroundColorSpan(Color.parseColor("#125688")), 0, secondUserName.length(),0);
+        builder.append(blue);
+
+        String secondComment = " " + photo.secondComment.comment;
+        SpannableString black = new SpannableString(secondComment);
+        black.subSequence(0, secondComment.length());
+        builder.append(black);
+
+        viewHolder.commentTwo.setText(builder, TextView.BufferType.SPANNABLE);
+
+        Picasso.with(getContext()).load(photo.imageUrl).resize(0, widthPixels).placeholder(R.drawable.placeholder).into(viewHolder.photo);
 
         Transformation transformation = new RoundedTransformationBuilder()
-                .borderColor(Color.BLUE)
-                .borderWidthDp(3)
-                .cornerRadiusDp(30)
-                .oval(false)
-                .build();
+                .borderColor(Color.parseColor("#556270"))
+                        .borderWidthDp(2)
+                        .cornerRadiusDp(30)
+                        .oval(false)
+                        .build();
 
         Picasso.with(getContext())
                 .load(photo.userImageUrl)
@@ -96,4 +141,8 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
 
         return convertView;
     }
+
+
+
+
 }
