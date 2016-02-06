@@ -40,12 +40,10 @@ public class PhotosActivity extends AppCompatActivity {
             }
         });
 
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-
+        swipeContainer.setColorSchemeResources(R.color.colorAccent,
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark);
+        
         //Set adapter to listview from layout
         ListView lvPhotos = (ListView) findViewById(R.id.lvPhotos);
         lvPhotos.setAdapter(aPhotos);
