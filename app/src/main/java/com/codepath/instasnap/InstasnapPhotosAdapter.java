@@ -1,5 +1,6 @@
 package com.codepath.instasnap;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.SpannableString;
@@ -18,7 +19,12 @@ import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,14 +86,16 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
         viewHolder.likes.setText(NumberFormat.getInstance().format((double) photo.likesCount) + " likes");
         viewHolder.timeStamp.setText(DateUtils.getRelativeTimeSpanString(photo.timeStamp, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS));
 
+        final ArrayList<InstasnapComment> comments = getCommentsArray(photo.comments);
         viewHolder.comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //add fragment with comments
-//                PhotosActivity activity = (PhotosActivity) context;
-//                FragmentTransaction t = activity.getFragmentManager().beginTransaction();
-//                t.add(R.id.your_placeholder, new CommentsFragment());
-//                t.commit();
+                PhotosActivity activity = (PhotosActivity) context;
+                FragmentTransaction t = activity.getFragmentManager().beginTransaction();
+                CommentsFragment fragment = CommentsFragment.newInstance(comments);
+                t.add(R.id.your_placeholder, fragment);
+                t.commit();
 
             }
         });
@@ -142,7 +150,26 @@ public class InstasnapPhotosAdapter extends ArrayAdapter<InstasnapPhoto> {
         return convertView;
     }
 
+    public ArrayList<InstasnapComment> getCommentsArray(JSONArray comments) {
+        ArrayList<InstasnapComment> commentsArray = new ArrayList<>();
 
+        try {
+            for (int i = 0; i < comments.length(); i++) {
+                InstasnapComment comment = new InstasnapComment();
+                JSONObject object = comments.getJSONObject(i);
+
+                comment.userName =  object.getJSONObject("from").getString("username");
+                comment.comment = object.getString("text");
+                comment.imageUrl = object.getJSONObject("from").getString("profile_picture");
+                commentsArray.add(i, comment);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return commentsArray;
+    }
 
 
 }

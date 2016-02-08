@@ -1,5 +1,7 @@
 package com.codepath.instasnap;
 
+import org.json.JSONArray;
+
 /**
  * Created by JaneChung on 2/2/16.
  */
@@ -14,5 +16,6 @@ public class InstasnapPhoto {
     public String userImageUrl;
     public InstasnapComment firstComment;
     public InstasnapComment secondComment;
+    public JSONArray comments;
 
 }
